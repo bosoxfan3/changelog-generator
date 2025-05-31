@@ -1,24 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function App() {
+    const [formData, setFormData] = useState({
+        repoOwner: '',
+        project: '',
+        dateStart: '',
+        dateEnd: '',
+    });
+
+    const updateFormData = (
+        value: string,
+        key: 'repoOwner' | 'project' | 'dateStart' | 'dateEnd'
+    ) => {
+        setFormData({ ...formData, [key]: value });
+    };
+
+    const generateChangelog = async () => {
+        const res = await fetch(`${API_BASE_URL}/generate-changelog`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await res.json();
+        console.log(data);
+    };
+
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
+            <input
+                type="text"
+                onChange={(e) => updateFormData(e.target.value, 'repoOwner')}
+                value={formData.repoOwner}
+            />
+            <input
+                type="text"
+                onChange={(e) => updateFormData(e.target.value, 'project')}
+                value={formData.project}
+            />
+            <input
+                type="date"
+                onChange={(e) => updateFormData(e.target.value, 'dateStart')}
+                value={formData.dateStart}
+            />
+            <input
+                type="date"
+                onChange={(e) => updateFormData(e.target.value, 'dateEnd')}
+                value={formData.dateEnd}
+            />
+            <button type="button" onClick={generateChangelog}>
+                Generate Changelog
+            </button>
         </div>
     );
 }

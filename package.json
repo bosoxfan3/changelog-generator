@@ -11,9 +11,14 @@
         "react-scripts": "5.0.1",
         "typescript": "^4.9.5"
     },
+    "devDependencies": {
+        "concurrently": "^9.1.2"
+    },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build"
+        "build": "react-scripts build",
+        "backend": "node backend/index.js",
+        "dev": "concurrently \"npm start\" \"npm run backend\""
     },
     "eslintConfig": {
         "extends": [
