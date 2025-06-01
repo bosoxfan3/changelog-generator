@@ -37,11 +37,9 @@ app.post('/generate-changelog', async (req, res) => {
             `https://api.github.com/repos/${repoOwner}/${project}/commits${query}`
         );
         const commitsArray = await commitsResponse.json();
-        console.log(commitsArray);
         const commitMessagesArray = commitsArray.map(
             (commit) => commit.commit.message
         );
-        console.log(commitMessagesArray);
         try {
             const response = await openai.chat.completions.create({
                 model: 'gpt-4',
@@ -60,9 +58,8 @@ app.post('/generate-changelog', async (req, res) => {
                 ],
             });
 
-            const data = response.choices[0].message.content;
-            console.log(data);
-            res.json({ data });
+            const content = response.choices[0].message.content;
+            res.json({ content });
         } catch (error) {
             console.error(error);
             res.status(500).json({
