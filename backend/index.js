@@ -33,46 +33,77 @@ app.post('/generate-changelog', async (req, res) => {
     const { repoOwner, project, dateStart, dateEnd } = req.body;
     try {
         const query = `?since=${dateStart}T00:00:00Z&until=${dateEnd}T23:59:59Z`;
-        const response = await fetch(
+        const commitsResponse = await fetch(
             `https://api.github.com/repos/${repoOwner}/${project}/commits${query}`
         );
-        const data = await response.json();
-        res.send({ data });
+        const commitsArray = await commitsResponse.json();
+        console.log(commitsArray);
+        const commitMessagesArray = commitsArray.map(
+            (commit) => commit.commit.message
+        );
+        console.log(commitMessagesArray);
+        try {
+            const response = await openai.chat.completions.create({
+                model: 'gpt-4',
+                messages: [
+                    {
+                        role: 'system',
+                        content:
+                            'You are a helpful developer assistant that generates user-facing changelogs from git commit messages. Focus only on changes that affect the end user: new features, bug fixes, UI changes, and performance improvements. Ignore internal refactors or minor code cleanups. Format the result as a markdown-style bullet list.',
+                    },
+                    {
+                        role: 'user',
+                        content: `Here are some commit messages:\n${commitMessagesArray.join(
+                            '\n'
+                        )}`,
+                    },
+                ],
+            });
+
+            const data = response.choices[0].message.content;
+            console.log(data);
+            res.json({ data });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                error: 'Something went wrong generating changelog.',
+            });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Unable to fetch commit list' });
     }
 });
 
-app.post('/generate-changelog', async (req, res) => {
-    const { commits } = req.body;
-    try {
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [
-                {
-                    role: 'system',
-                    content:
-                        'You are a helpful developer assistant that generates user-facing changelogs from git commit messages. Focus only on changes that affect the end user: new features, bug fixes, UI changes, and performance improvements. Ignore internal refactors or minor code cleanups. Format the result as a markdown-style bullet list.',
-                },
-                {
-                    role: 'user',
-                    content: `Here are some commit messages:\n${commits.join(
-                        '\n'
-                    )}`,
-                },
-            ],
-        });
+// app.post('/generate-changelog', async (req, res) => {
+//     const { commits } = req.body;
+//     try {
+//         const response = await openai.chat.completions.create({
+//             model: 'gpt-4',
+//             messages: [
+//                 {
+//                     role: 'system',
+//                     content:
+//                         'You are a helpful developer assistant that generates user-facing changelogs from git commit messages. Focus only on changes that affect the end user: new features, bug fixes, UI changes, and performance improvements. Ignore internal refactors or minor code cleanups. Format the result as a markdown-style bullet list.',
+//                 },
+//                 {
+//                     role: 'user',
+//                     content: `Here are some commit messages:\n${commits.join(
+//                         '\n'
+//                     )}`,
+//                 },
+//             ],
+//         });
 
-        const summary = response.choices[0].message.content;
-        res.json({ summary });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Something went wrong generating changelog.',
-        });
-    }
-});
+//         const summary = response.choices[0].message.content;
+//         res.json({ summary });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({
+//             error: 'Something went wrong generating changelog.',
+//         });
+//     }
+// });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
