@@ -13,6 +13,7 @@ model Changelog {
   project   String
   from      String  // ISO date: "2025-05-31"
   to        String  // ISO date: "2025-06-01"
+  title     String
   content   String
   createdAt DateTime @default(now())
 }

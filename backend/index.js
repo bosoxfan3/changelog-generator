@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
 require('dotenv').config();
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const app = express();
 app.use(express.json());
@@ -27,6 +29,13 @@ const openai = new OpenAI({
 
 app.get('/', (req, res) => {
     res.send('Backend is working!');
+});
+
+app.get('/changelogs', async (req, res) => {
+    const entries = await prisma.changelog.findMany({
+        orderBy: { createdAt: 'desc' },
+    });
+    res.json(entries);
 });
 
 app.post('/generate-changelog', async (req, res) => {
@@ -72,35 +81,38 @@ app.post('/generate-changelog', async (req, res) => {
     }
 });
 
-// app.post('/generate-changelog', async (req, res) => {
-//     const { commits } = req.body;
-//     try {
-//         const response = await openai.chat.completions.create({
-//             model: 'gpt-4',
-//             messages: [
-//                 {
-//                     role: 'system',
-//                     content:
-//                         'You are a helpful developer assistant that generates user-facing changelogs from git commit messages. Focus only on changes that affect the end user: new features, bug fixes, UI changes, and performance improvements. Ignore internal refactors or minor code cleanups. Format the result as a markdown-style bullet list.',
-//                 },
-//                 {
-//                     role: 'user',
-//                     content: `Here are some commit messages:\n${commits.join(
-//                         '\n'
-//                     )}`,
-//                 },
-//             ],
-//         });
+app.post('/submit-changelog', async (req, res) => {
+    const { repoOwner, project, dateStart, dateEnd, title, description } =
+        req.body;
 
-//         const summary = response.choices[0].message.content;
-//         res.json({ summary });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({
-//             error: 'Something went wrong generating changelog.',
-//         });
-//     }
-// });
+    if (
+        !repoOwner ||
+        !project ||
+        !dateStart ||
+        !dateEnd ||
+        !title ||
+        !description
+    ) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    try {
+        const savedData = await prisma.changelog.create({
+            data: {
+                repoOwner,
+                project,
+                from: dateStart,
+                to: dateEnd,
+                title,
+                content: description,
+            },
+        });
+
+        res.status(201).json(savedData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to save changelog' });
+    }
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
