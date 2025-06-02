@@ -54,6 +54,16 @@ I used AI tools to help set up the Prisma and SQLite database functionality, err
 ```
 REACT_APP_API_BASE_URL=http://localhost:8080
 OPENAI_API_KEY={your_open_ai_key}
+DATABASE_URL=file:./dev.db
+```
+
+If you don’t plan to run local writes or migrations, you can use any valid-looking `DATABASE_URL` to satisfy Prisma.
+
+**Note:** If you want full DB functionality, you can run:
+
+```
+npx prisma generate
+npx prisma db push
 ```
 
 4. `cd backend`
