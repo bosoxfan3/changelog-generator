@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import ChangelogCard from '../../components/changelog-card';
+import './style.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -13,7 +15,7 @@ interface Changelog {
     createdAt: string;
 }
 
-const ChangelogPage = () => {
+const ChangelogsPage = () => {
     const [changelogs, setChangelogs] = useState<Changelog[]>([]);
 
     useEffect(() => {
@@ -25,15 +27,20 @@ const ChangelogPage = () => {
         };
         getChangelogs();
     }, []);
+
     return (
         <div>
             <div>
                 {changelogs.map((changelog) => (
-                    <div key={changelog.id}>{changelog.content}</div>
+                    <ChangelogCard
+                        key={changelog.id}
+                        title={changelog.title}
+                        content={changelog.content}
+                    />
                 ))}
             </div>
         </div>
     );
 };
 
-export default ChangelogPage;
+export default ChangelogsPage;

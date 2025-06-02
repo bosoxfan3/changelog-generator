@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './index.css';
+import './style.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -120,21 +120,22 @@ const GeneratePage = () => {
             </div>
             {repoDataFetched && (
                 <div>
-                    <div>
+                    <div className="form-group">
                         <label htmlFor="title">Title</label>
                         <input
                             type="text"
-                            name="title"
+                            id="title"
                             onChange={(e) =>
                                 updateChangelogData(e.target.value, 'title')
                             }
                             value={changelogData.title}
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label htmlFor="description">Description</label>
                         <textarea
-                            name="description"
+                            id="description"
+                            rows={8}
                             onChange={(e) =>
                                 updateChangelogData(
                                     e.target.value,
@@ -144,9 +145,11 @@ const GeneratePage = () => {
                             value={changelogData.description}
                         />
                     </div>
-                    <button type="button" onClick={submitChangelog}>
-                        Submit Changelog
-                    </button>
+                    <div className="submit-button-container">
+                        <button type="button" onClick={submitChangelog}>
+                            Submit Changelog
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

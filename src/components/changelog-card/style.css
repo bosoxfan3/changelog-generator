@@ -1,0 +1,24 @@
+.changelog-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.card-header {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #0f172a;
+}
+
+.card-content {
+    margin-top: 0.75rem;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+    color: #334155;
+    line-height: 1.5;
+}
