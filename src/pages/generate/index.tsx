@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './index.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -14,23 +15,33 @@ type ChangelogErrorResponse = {
 
 type ChangelogResponse = ChangelogSuccessResponse | ChangelogErrorResponse;
 
-const Generate = () => {
+const GeneratePage = () => {
     const [repoData, setRepoData] = useState({
         repoOwner: '',
         project: '',
         dateStart: '',
         dateEnd: '',
     });
+
     const [changelogData, setChangelogData] = useState({
         title: '',
         description: '',
     });
+
+    const [repoDataFetched, setRepoDataFetched] = useState(false);
 
     const updateRepoData = (
         value: string,
         key: 'repoOwner' | 'project' | 'dateStart' | 'dateEnd'
     ) => {
         setRepoData({ ...repoData, [key]: value });
+    };
+
+    const updateChangelogData = (
+        value: string,
+        key: 'title' | 'description'
+    ) => {
+        setChangelogData({ ...changelogData, [key]: value });
     };
 
     const generateChangelog = async () => {
@@ -45,18 +56,12 @@ const Generate = () => {
         if ('error' in data) {
             console.error(data.error);
         } else {
+            setRepoDataFetched(true);
             setChangelogData({
                 title: `${repoData.dateEnd}`,
                 description: data.content,
             });
         }
-    };
-
-    const updateChangelogData = (
-        value: string,
-        key: 'title' | 'description'
-    ) => {
-        setChangelogData({ ...changelogData, [key]: value });
     };
 
     const submitChangelog = async () => {
@@ -76,19 +81,26 @@ const Generate = () => {
     };
 
     return (
-        <div className="App">
-            <div>
+        <div className="container">
+            <h1 className="title">AI-Powered Changelog Generator</h1>
+            <p className="subtitle">
+                Quickly summarize recent commits into a clean, public changelog.
+                Just enter a repo and date range.
+            </p>
+            <div className="input-section">
                 <input
                     type="text"
                     onChange={(e) =>
                         updateRepoData(e.target.value, 'repoOwner')
                     }
                     value={repoData.repoOwner}
+                    placeholder="Repository Owner (i.e. vercel)"
                 />
                 <input
                     type="text"
                     onChange={(e) => updateRepoData(e.target.value, 'project')}
                     value={repoData.project}
+                    placeholder="Repository Name (i.e. next.js)"
                 />
                 <input
                     type="date"
@@ -106,7 +118,7 @@ const Generate = () => {
                     Generate Changelog
                 </button>
             </div>
-            {!!changelogData.title && !!changelogData.description && (
+            {repoDataFetched && (
                 <div>
                     <div>
                         <label htmlFor="title">Title</label>
@@ -141,4 +153,4 @@ const Generate = () => {
     );
 };
 
-export default Generate;
+export default GeneratePage;
