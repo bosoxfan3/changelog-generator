@@ -24,7 +24,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "backend": "node backend/index.js",
-        "dev": "concurrently \"npm start\" \"npm run backend\""
+        "dev": "concurrently \"npm start\" \"npm run backend\"",
+        "reset-db": "npx prisma migrate reset --schema=backend/prisma/schema.prisma"
     },
     "eslintConfig": {
         "extends": [
