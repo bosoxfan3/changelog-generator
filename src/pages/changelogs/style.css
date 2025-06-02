@@ -1,13 +1,13 @@
 .container {
     max-width: 800px;
     margin: auto;
-    padding: 32px;
+    padding: 2rem;
 }
 
 .title {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 600;
     color: #0f172a;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
     text-align: center;
 }

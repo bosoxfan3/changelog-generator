@@ -34,6 +34,8 @@ Minimal validation is in place (e.g., no future dates, all fields required), but
 
 I would 100% modularize this so that the pages/generate file did not hold so much JSX and so many functions. But again, it kept it cleaner for an MVP to just keep all the state and functionality in the top level.
 
+I used AI tools to help set up the Prisma and SQLite database functionality, error logging, and some component styling (especially colors).
+
 ## 🔧 Built With
 
 -   React
