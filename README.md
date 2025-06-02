@@ -4,6 +4,8 @@ This is a two-part app that uses AI to generate user-facing changelogs from GitH
 
 ## Part 1: Developer Tool
 
+Accessible at '/'
+
 Input a public repo owner, public project name, and date range
 
 Fetches commits from the GitHub API
@@ -13,6 +15,8 @@ Uses OpenAI to summarize relevant changes
 Lets you edit the title/description before publishing
 
 ## Part 2: Public Changelog Page
+
+Accessible at '/changelogs'/
 
 Lists all saved changelogs
 
@@ -25,6 +29,8 @@ Data persists using a lightweight SQLite DB via Prisma
 [https://changelog-generator-pi.vercel.app/](https://changelog-generator-pi.vercel.app/)
 
 ## 🧠 Notes & Decisions
+
+The assumption is that in production the generate page '/' wouldn't be publicly available but the changelogs page ('/changelogs') would be. Hence generate sends you to changelogs, but there is no link to go from changelogs back to generate (you could just hit the '/' url but that wouldn't be available without authentication in production).
 
 This app currently assumes a single-repo use case and does not support managing changelogs across multiple repositories. In a real-world production setting, I would set up unique URLs or IDs per repo and persist changelogs separately for each. For the purposes of this project, I’ve prioritized the core UX and AI integration over multi-repo management.
 
