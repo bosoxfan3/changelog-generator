@@ -137,6 +137,7 @@ const GeneratePage = () => {
             }, 1000);
         } else {
             console.error('Error saving changelog:', data.error);
+            setIsLoading(false);
         }
     };
 
