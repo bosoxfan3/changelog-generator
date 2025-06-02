@@ -1,6 +1,10 @@
 {
     "name": "changelog-generator",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "author": "Daniel Acquesta <dgacquesta@gmail.com>",
+    "homepage": "https://changelog-generator-pi.vercel.app/",
+    "description": "Generate changelogs from the git history of public repos",
+    "license": "MIT",
     "private": true,
     "dependencies": {
         "@types/node": "^16.18.126",

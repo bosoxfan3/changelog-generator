@@ -8,14 +8,13 @@ type ChangelogSuccessResponse = {
     status: number;
     content: string;
 };
-
 type ChangelogErrorResponse = {
     status: number;
     error: string;
 };
-
 type ChangelogResponse = ChangelogSuccessResponse | ChangelogErrorResponse;
 
+// RepoData corresponds to the 4 main inputs
 interface RepoData {
     repoOwner: string;
     project: string;
@@ -23,6 +22,7 @@ interface RepoData {
     dateEnd: string;
 }
 
+// ChangelogData corresponds to the 2 outputs that will be published
 interface ChangelogData {
     title: string;
     description: string;
@@ -30,13 +30,13 @@ interface ChangelogData {
 
 const GeneratePage = () => {
     const navigate = useNavigate();
+
     const [repoData, setRepoData] = useState<RepoData>({
         repoOwner: '',
         project: '',
         dateStart: '',
         dateEnd: '',
     });
-
     const [changelogData, setChangelogData] = useState<ChangelogData>({
         title: '',
         description: '',
@@ -44,6 +44,7 @@ const GeneratePage = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [repoDataFetched, setRepoDataFetched] = useState<boolean>(false);
+
     const [hasRepoDataError, setHasRepoDataError] = useState<boolean>(false);
     const [hasChangelogDataError, setHasChangelogDataError] =
         useState<boolean>(false);
@@ -68,15 +69,16 @@ const GeneratePage = () => {
             !repoData.project ||
             !repoData.dateStart ||
             !repoData.dateEnd;
+
         if (error) {
-            console.log('here');
+            // don't set that there is an error until the user tries to submit
             setHasRepoDataError(true);
             return;
         }
-        console.log('here');
-        setHasRepoDataError(false);
 
+        setHasRepoDataError(false);
         setIsLoading(true);
+
         const res = await fetch(`${API_BASE_URL}/generate-changelog`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -88,9 +90,10 @@ const GeneratePage = () => {
         if ('error' in data) {
             console.error(data.error);
         } else {
+            // I use this to show/hide the changelog data fields, because I didn't want to rely to !!changelogData.title or something
             setRepoDataFetched(true);
             setChangelogData({
-                title: `${repoData.dateEnd}`,
+                title: repoData.dateEnd,
                 description: data.content,
             });
         }
@@ -99,13 +102,16 @@ const GeneratePage = () => {
 
     const submitChangelog = async () => {
         const error = !changelogData.title || !changelogData.description;
+
         if (error) {
+            // don't set that there is an error until the user tries to submit
             setHasChangelogDataError(true);
             return;
-        } else {
-            setHasChangelogDataError(false);
         }
+
+        setHasChangelogDataError(false);
         setIsLoading(true);
+
         const res = await fetch(`${API_BASE_URL}/submit-changelog`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -122,8 +128,9 @@ const GeneratePage = () => {
                 dateStart: '',
                 dateEnd: '',
             });
-
             setChangelogData({ title: '', description: '' });
+
+            // just felt like I wanted to show a spinner even though it isn't necessary. UX decision on my end
             setTimeout(() => {
                 setIsLoading(false);
                 navigate('/changelogs');
@@ -140,6 +147,8 @@ const GeneratePage = () => {
                 Quickly summarize recent commits into a clean, public changelog.
                 Just enter a repo and date range.
             </p>
+
+            {/* 4 main inputs and changelog generating button */}
             <div className="input-section">
                 <div className="input-group">
                     <label htmlFor="owner">Repository Owner</label>
@@ -216,11 +225,14 @@ const GeneratePage = () => {
                     Generate Changelog
                 </button>
             </div>
+
             {isLoading && (
                 <div className="spinner-overlay">
                     <div className="spinner" />
                 </div>
             )}
+
+            {/* The inputs pre-filled by ChatGPT that can be saved to the changelog */}
             {repoDataFetched && (
                 <div>
                     <div className="output-group">

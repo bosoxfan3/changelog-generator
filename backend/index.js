@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
 require('dotenv').config();
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -75,7 +76,7 @@ app.post('/generate-changelog', async (req, res) => {
         } catch (error) {
             console.error(error);
             res.status(500).json({
-                error: 'Something went wrong generating changelog.',
+                error: 'Something went wrong generating the changelog.',
             });
         }
     } catch (error) {
@@ -88,6 +89,7 @@ app.post('/submit-changelog', async (req, res) => {
     const { repoOwner, project, dateStart, dateEnd, title, description } =
         req.body;
 
+    // shouldn't hit this due to FE validation, but just extra validation
     if (
         !repoOwner ||
         !project ||
@@ -98,6 +100,7 @@ app.post('/submit-changelog', async (req, res) => {
     ) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
+
     try {
         const savedData = await prisma.changelog.create({
             data: {

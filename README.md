@@ -1,8 +1,10 @@
-🧾 AI Changelog Generator
+# AI Changelog Generator
+
 This is a two-part app that uses AI to generate user-facing changelogs from GitHub commit messages.
 
-🛠 Developer Tool
-Input a repo owner, project name, and date range
+## Part 1: Developer Tool
+
+Input a public repo owner, public project name, and date range
 
 Fetches commits from the GitHub API
 
@@ -10,31 +12,58 @@ Uses OpenAI to summarize relevant changes
 
 Lets you edit the title/description before publishing
 
-🌍 Public Changelog Page
+## Part 2: Public Changelog Page
+
 Lists all saved changelogs
 
 Each changelog is expandable, with clean formatting
 
 Data persists using a lightweight SQLite DB via Prisma
 
-🧠 Notes & Decisions
-This app assumes a single-repo use case for simplicity. In a production setting, I’d use unique URLs or IDs per repo to support multi-repo changelog management.
+## 🚀 Live Demo
 
-I used my own CSS instead of Tailwind for faster iteration.
+[https://changelog-generator-pi.vercel.app/](https://changelog-generator-pi.vercel.app/)
+
+## 🧠 Notes & Decisions
+
+This app assumes a single-repo use case for simplicity. In a production setting, I’d use unique URLs or IDs per repo to support multi-repo changelog viewing and management.
+
+It also assumes that the user will be fetching the commit history of a public repo. Authorization could be added in the future but did not make sense for a MVP.
 
 Minimal validation is in place (e.g., no future dates, all fields required), but more could easily be added.
 
-🧪 Running the App
+I would 100% modularize this so that the pages/generate file did not hold so much JSX and so many functions. But again, it kept it cleaner for an MVP to just keep all the state and functionality in the top level.
 
-# Backend
+## 🔧 Built With
 
-cd backend
-npm install
-npx prisma migrate dev
-npm run dev
+-   React
+-   TypeScript
+-   OpenAI API
+-   GitHub API
+-   Prisma
+-   SQLite
 
-# Frontend
+## 📦 Getting Started
 
-cd frontend
-npm install
-npm start
+1. Clone the repo
+2. Run `npm install`
+3. You'll need valid credentials from [OpenAI](https://platform.openai.com/docs/overview). Once you have that, add an `.env` file with:
+
+```
+REACT_APP_API_BASE_URL=http://localhost:8080
+OPENAI_API_KEY={your_open_ai_key}
+```
+
+4. `cd backend`
+5. Run `npm install`
+6. Run `npx prisma migrate dev`
+7. cd back out to root, and run `npm run dev`
+8. can optionally just run the front end with `npm start`
+
+## ✍️ Author
+
+Built by [Daniel Acquesta](https://danielacquesta.dev)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
