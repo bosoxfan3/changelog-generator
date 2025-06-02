@@ -22,20 +22,26 @@ const ChangelogsPage = () => {
         const getChangelogs = async () => {
             const response = await fetch(`${API_BASE_URL}/changelogs`);
             const data = await response.json();
-            console.log(data);
             setChangelogs(data);
         };
         getChangelogs();
     }, []);
 
+    const repoTitle =
+        changelogs.length > 0
+            ? `Changelog for ${changelogs[0].repoOwner}/${changelogs[0].project}`
+            : '';
+
     return (
-        <div>
+        <div className="container">
+            <h1 className="title">{repoTitle}</h1>
             <div>
-                {changelogs.map((changelog) => (
+                {changelogs.map((changelog, index) => (
                     <ChangelogCard
                         key={changelog.id}
                         title={changelog.title}
                         content={changelog.content}
+                        index={index}
                     />
                 ))}
             </div>
