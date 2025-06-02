@@ -115,8 +115,8 @@ app.post('/submit-changelog', async (req, res) => {
 
         res.status(201).json(savedData);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to save changelog' });
+        console.error('Prisma error:', err);
+        res.status(500).json({ error: err.message || 'Unknown error' });
     }
 });
 
