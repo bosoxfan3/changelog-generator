@@ -16,7 +16,7 @@ Lets you edit the title/description before publishing
 
 ## Part 2: Public Changelog Page
 
-Accessible at '/changelogs'/
+Accessible at '/changelogs'
 
 Lists all saved changelogs
 
@@ -29,6 +29,8 @@ Data persists using a lightweight SQLite DB via Prisma
 [https://changelog-generator-pi.vercel.app/](https://changelog-generator-pi.vercel.app/)
 
 ## 🧠 Notes & Decisions
+
+I tried to keep it simple and focus on the product functionality over styling and layout. In a production enviroment the generator and the feed would probably not look so similar/minimalistic.
 
 The assumption is that in production the generate page '/' wouldn't be publicly available but the changelogs page ('/changelogs') would be. Hence generate sends you to changelogs, but there is no link to go from changelogs back to generate (you could just hit the '/' url but that wouldn't be available without authentication in production).
 
@@ -69,36 +71,36 @@ DATABASE_URL=file:./dev.db
 You'll need a valid `DATABASE_URL` to use the full functionality locally. You have two options:
 
 -   **Use SQLite (easier for local testing)**: Use `file:./dev.db ` and follow the SQLite steps below referenced below as Option A:
--   **Use Postgre**: Point DATABASE_URL to a local or cloud Postgres instance (e.g. Railway, Supabase, Docker, etc.)
+-   **Use Postgres**: Point DATABASE_URL to a local or cloud Postgres instance (e.g. Railway, Supabase, Docker, etc.)
 
-# Backend Setup
+### Backend Setup
 
 6. Set up the backend. `cd backend`
 7. Run `npm install`
 
-# Option A: Local DB with SQLite
+#### Option A: Local DB with SQLite
 
 8. Replace the Prisma schema by running `cp prisma/schema.local.prisma prisma/schema.prisma`. Ensure your root `.env` file contains `DATABASE_URL=file:./dev.db"
 9. Run `npx prisma generate`
 10. Run `npx prisma db push`
 
-# Option B: Local DB with Postgres
+#### Option B: Local DB with Postgres
 
 8. Ensure your root `.env` has a valid Postgres URL like `DATABASE_URL=postgresql://user:password@localhost:5432/dbname`
 9. Run `npx prisma migrate dev` OR
 10. If you prefer skipping migrations: run `npx prisma db push`
 
-# After completing one of the above:
+### After completing one of the above:
 
 11. Return to the root `cd ..`
 12. Start both the front and back end `npm run dev`
     Alternatively, if you only want to run the frontend without the backend:
     `npm start`
 
-# Dev Notes
+## Dev Notes
 
 -   Requires Node.js 18+
--   The app uses SQLite for local development, no external DB setup needed
+-   The app uses SQLite for local development, no external DB setup needed (outlined above in Getting Started)
 -   Be sure to provide a valid OpenAI key to generate changelogs
 
 ## ✍️ Author
