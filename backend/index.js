@@ -8,7 +8,10 @@ const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://changelog-generator-pi.vercel.app',
+];
 
 app.use(
     cors({
