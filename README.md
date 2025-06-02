@@ -26,9 +26,9 @@ Data persists using a lightweight SQLite DB via Prisma
 
 ## 🧠 Notes & Decisions
 
-This app assumes a single-repo use case for simplicity. In a production setting, I’d use unique URLs or IDs per repo to support multi-repo changelog viewing and management.
+This app currently assumes a single-repo use case and does not support managing changelogs across multiple repositories. In a real-world production setting, I would set up unique URLs or IDs per repo and persist changelogs separately for each. For the purposes of this project, I’ve prioritized the core UX and AI integration over multi-repo management.
 
-It also assumes that the user will be fetching the commit history of a public repo. Authorization could be added in the future but did not make sense for a MVP.
+It also assumes that the user will be fetching the commit history of a _public_ repo. Authorization could be added in the future but did not make sense for a MVP.
 
 Minimal validation is in place (e.g., no future dates, all fields required), but more could easily be added.
 
