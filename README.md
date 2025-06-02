@@ -47,30 +47,36 @@ I used AI tools to help set up the Prisma and SQLite database functionality, err
 
 ## 📦 Getting Started
 
-1. Clone the repo
-2. Run `npm install`
-3. You'll need valid credentials from [OpenAI](https://platform.openai.com/docs/overview). Once you have that, add an `.env` file with:
+1. Clone the repo `git clone https://github.com/bosoxfan3/changelog-generator.git`
+2. `cd changelog-generator`
+3. Run `npm install`
+4. You'll need valid credentials from [OpenAI](https://platform.openai.com/docs/overview). Once you have that, copy the included .env.example file and fill in your credentials:
+   `cp .env.example .env`
+   The update `.env` with your own values:
 
 ```
 REACT_APP_API_BASE_URL=http://localhost:8080
-OPENAI_API_KEY={your_open_ai_key}
+OPENAI_API_KEY=your_openai_key_here
 DATABASE_URL=file:./dev.db
 ```
 
-If you don’t plan to run local writes or migrations, you can use any valid-looking `DATABASE_URL` to satisfy Prisma.
+The default DATABASE_URL uses SQLite, so no external database setup is required for local development.
 
-**Note:** If you want full DB functionality, you can run:
+5. Set up the backend. `cd backend`
+6. Run `npm install`
+7. Run `npx prisma migrate dev`
+   If you don't need migrations, you can just run:
+   `npx prisma db push`
+8. Return to the root `cd ..`
+9. Start both the front and back end `npm run dev`
+   Alternatively, if you only want to run the frontend without the backend:
+   `npm start`
 
-```
-npx prisma generate
-npx prisma db push
-```
+# Notes
 
-4. `cd backend`
-5. Run `npm install`
-6. Run `npx prisma migrate dev`
-7. cd back out to root, and run `npm run dev`
-8. can optionally just run the front end with `npm start`
+-   Requires Node.js 18+
+-   The app uses SQLite for local development, no external DB setup needed
+-   Be sure to provide a valid OpenAI key to generate changelogs
 
 ## ✍️ Author
 
