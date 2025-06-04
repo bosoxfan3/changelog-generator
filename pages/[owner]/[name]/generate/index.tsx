@@ -70,8 +70,6 @@ const GeneratePage = () => {
             return;
         }
 
-        console.log('here');
-
         setHasRepoDataError(false);
         setIsLoading(true);
 
