@@ -39,7 +39,17 @@ app.get('/', (req, res) => {
 
 app.get('/changelogs', async (req, res) => {
     const entries = await prisma.changelog.findMany({
-        orderBy: { createdAt: 'desc' },
+        where: {
+            owner: {
+                equals: req.query.owner,
+                mode: 'insensitive',
+            },
+            name: {
+                equals: req.query.name,
+                mode: 'insensitive',
+            },
+        },
+        orderBy: { to: 'desc' },
     });
     res.json(entries);
 });
@@ -95,13 +105,19 @@ app.post('/submit-changelog', async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const [startMonth, startDay, startYear] = dateStart.split('-');
+    const formattedStart = `${startYear}-${startMonth}-${startDay}`;
+
+    const [endMonth, endDay, endYear] = dateEnd.split('-');
+    const formattedEnd = `${endYear}-${endMonth}-${endDay}`;
+
     try {
         const savedData = await prisma.changelog.create({
             data: {
                 repoOwner: owner,
                 project: name,
-                from: dateStart,
-                to: dateEnd,
+                from: formattedStart,
+                to: formattedEnd,
                 title,
                 content: description,
             },

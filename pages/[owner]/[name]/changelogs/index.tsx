@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
     const { owner, name } = params;
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/changelogs`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/changelogs?owner=${owner}&name=${name}`
     );
     const changelogs = await res.json();
 
