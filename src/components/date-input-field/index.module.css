@@ -1,0 +1,33 @@
+.formField {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+}
+
+.label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+}
+
+.input {
+    border: 1px solid #14b8a6;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    flex: 1;
+    min-width: 160px;
+    background-color: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+    border-color: #0f766e;
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
+    outline: none;
+}
+
+.error {
+    border: 1px solid #dc2626;
+    background-color: #fef2f2;
+}

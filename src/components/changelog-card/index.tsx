@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import './style.css';
+import styles from './index.module.css';
 
 type Props = {
     title: string;
@@ -12,12 +12,15 @@ function ChangelogCard({ title, content, index }: Props) {
     const [expanded, setExpanded] = useState<boolean>(index === 0);
 
     return (
-        <div className="changelog-card">
-            <div onClick={() => setExpanded(!expanded)} className="card-header">
+        <div className={styles.changelogCard}>
+            <div
+                onClick={() => setExpanded(!expanded)}
+                className={styles.cardHeader}
+            >
                 {expanded ? '▼' : '▶'} {title}
             </div>
             {expanded && (
-                <div className="card-content">
+                <div className={styles.cardContent}>
                     <ReactMarkdown>{content}</ReactMarkdown>
                 </div>
             )}
