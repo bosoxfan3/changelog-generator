@@ -43,11 +43,11 @@ app.get('/changelogs', async (req, res) => {
 });
 
 app.post('/generate-changelog', async (req, res) => {
-    const { repoOwner, project, dateStart, dateEnd } = req.body;
+    const { owner, name, dateStart, dateEnd } = req.body;
     try {
         const query = `?since=${dateStart}T00:00:00Z&until=${dateEnd}T23:59:59Z`;
         const commitsResponse = await fetch(
-            `https://api.github.com/repos/${repoOwner}/${project}/commits${query}`
+            `https://api.github.com/repos/${owner}/${name}/commits${query}`
         );
         const commitsArray = await commitsResponse.json();
         const commitMessagesArray = commitsArray.map(
@@ -86,26 +86,18 @@ app.post('/generate-changelog', async (req, res) => {
 });
 
 app.post('/submit-changelog', async (req, res) => {
-    const { repoOwner, project, dateStart, dateEnd, title, description } =
-        req.body;
+    const { owner, name, dateStart, dateEnd, title, description } = req.body;
 
     // shouldn't hit this due to FE validation, but just extra validation
-    if (
-        !repoOwner ||
-        !project ||
-        !dateStart ||
-        !dateEnd ||
-        !title ||
-        !description
-    ) {
+    if (!owner || !name || !dateStart || !dateEnd || !title || !description) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
     try {
         const savedData = await prisma.changelog.create({
             data: {
-                repoOwner,
-                project,
+                repoOwner: owner,
+                project: name,
                 from: dateStart,
                 to: dateEnd,
                 title,
