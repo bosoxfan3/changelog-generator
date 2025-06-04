@@ -1,0 +1,31 @@
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.inputSection {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.buttonContainer {
+    text-align: center;
+}
+
+@media (min-width: 600px) {
+    .inputSection {
+        grid-template-columns: 1fr 1fr;
+    }
+}
