@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+
 import styles from './index.module.css';
 
 import ChangelogCard from '../../../../components/changelog-card';
