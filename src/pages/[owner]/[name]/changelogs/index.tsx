@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import styles from './index.module.css';
 
 import ChangelogCard from '../../../../components/changelog-card';
@@ -17,26 +16,18 @@ interface Changelog {
     createdAt: string;
 }
 
-const ChangelogsPage = () => {
-    const router = useRouter();
-    const { owner, name } = router.query;
+type Props = {
+    changelogs: Changelog[];
+    owner: string;
+    name: string;
+};
 
-    const [changelogs, setChangelogs] = useState<Changelog[]>([]);
-
-    useEffect(() => {
-        const getChangelogs = async () => {
-            const response = await fetch(`${API_BASE_URL}/changelogs`);
-            const data = await response.json();
-            setChangelogs(data);
-        };
-        getChangelogs();
-    }, []);
-
+const ChangelogsPage = ({ changelogs, owner, name }: Props) => {
     const repoTitle = `Changelog for ${owner}/${name}`;
 
     return (
-        <div className="container">
-            <h1 className="title">{repoTitle}</h1>
+        <div className={styles.container}>
+            <h1 className={styles.title}>{repoTitle}</h1>
             <div>
                 {changelogs.map((changelog, index) => (
                     <ChangelogCard
@@ -49,6 +40,32 @@ const ChangelogsPage = () => {
             </div>
         </div>
     );
+};
+
+type Params = {
+    owner: string;
+    name: string;
+};
+
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
+    params,
+}) => {
+    if (!params) {
+        return { notFound: true };
+    }
+
+    const { owner, name } = params;
+
+    const res = await fetch(`${API_BASE_URL}/changelogs`);
+    const changelogs = await res.json();
+
+    return {
+        props: {
+            changelogs,
+            owner,
+            name,
+        },
+    };
 };
 
 export default ChangelogsPage;
