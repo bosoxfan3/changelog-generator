@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+        {
+            "source": "/changelogs",
+            "destination": "https://changelog-generator-production.up.railway.app/changelogs"
+        },
+        {
+            "source": "/generate-changelog",
+            "destination": "https://changelog-generator-production.up.railway.app/generate-changelog"
+        },
+        {
+            "source": "/submit-changelog",
+            "destination": "https://changelog-generator-production.up.railway.app/submit-changelog"
+        }
+    ]
+}
