@@ -60,7 +60,8 @@ const GeneratePage = () => {
         setChangelogData({ ...changelogData, [key]: value });
     };
 
-    const generateChangelog = async () => {
+    const generateChangelog = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const error = !repoData.dateStart || !repoData.dateEnd;
 
         if (error) {
@@ -68,6 +69,8 @@ const GeneratePage = () => {
             setHasRepoDataError(true);
             return;
         }
+
+        console.log('here');
 
         setHasRepoDataError(false);
         setIsLoading(true);
@@ -96,7 +99,8 @@ const GeneratePage = () => {
         setIsLoading(false);
     };
 
-    const submitChangelog = async () => {
+    const submitChangelog = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const error = !changelogData.title || !changelogData.description;
 
         if (error) {
