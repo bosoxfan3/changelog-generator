@@ -26,7 +26,7 @@
         "start": "next start",
         "lint": "next lint",
         "backend": "node backend/index.js",
-        "full-dev": "concurrently \"npm start\" \"npm run backend\"",
+        "full-dev": "concurrently \"npm run dev\" \"npm run backend\"",
         "reset-db": "npx prisma migrate reset --schema=backend/prisma/schema.prisma"
     },
     "eslintConfig": {
