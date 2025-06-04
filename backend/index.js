@@ -40,11 +40,11 @@ app.get('/', (req, res) => {
 app.get('/changelogs', async (req, res) => {
     const entries = await prisma.changelog.findMany({
         where: {
-            owner: {
+            repoOwner: {
                 equals: req.query.owner,
                 mode: 'insensitive',
             },
-            name: {
+            project: {
                 equals: req.query.name,
                 mode: 'insensitive',
             },
