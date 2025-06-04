@@ -4,16 +4,18 @@ type Props = {
     id: string;
     hasError?: boolean;
     labelText: string;
-    placeholder?: string;
+    min?: string;
+    max?: string;
     value: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const TextInputField = ({
+const DateInputField = ({
     id,
     hasError,
     labelText,
-    placeholder,
+    min,
+    max,
     value,
     onChange,
 }: Props) => (
@@ -23,13 +25,14 @@ const TextInputField = ({
         </label>
         <input
             id={id}
-            type="text"
+            type="date"
             className={`${hasError ?? styles.error} ${styles.input}`}
-            placeholder={placeholder}
+            min={min}
+            max={max}
             value={value}
             onChange={onChange}
         />
     </div>
 );
 
-export default TextInputField;
+export default DateInputField;

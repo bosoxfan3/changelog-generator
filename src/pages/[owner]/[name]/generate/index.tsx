@@ -1,6 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './style.css';
+import { useRouter } from 'next/router';
+import styles from './index.module.css';
+
+import TextInputField from '../../../../components/text-input-field';
+import DateInputField from '../../../../components/date-input-field';
+import TextAreaField from '../../../../components/text-area-field';
+import Button from '../../../../components/button';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -14,10 +19,8 @@ type ChangelogErrorResponse = {
 };
 type ChangelogResponse = ChangelogSuccessResponse | ChangelogErrorResponse;
 
-// RepoData corresponds to the 4 main inputs
+// RepoData corresponds to the 2 date inputs
 interface RepoData {
-    repoOwner: string;
-    project: string;
     dateStart: string;
     dateEnd: string;
 }
@@ -29,11 +32,10 @@ interface ChangelogData {
 }
 
 const GeneratePage = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
+    const { owner, name } = router.query;
 
     const [repoData, setRepoData] = useState<RepoData>({
-        repoOwner: '',
-        project: '',
         dateStart: '',
         dateEnd: '',
     });
@@ -49,10 +51,7 @@ const GeneratePage = () => {
     const [hasChangelogDataError, setHasChangelogDataError] =
         useState<boolean>(false);
 
-    const updateRepoData = (
-        value: string,
-        key: 'repoOwner' | 'project' | 'dateStart' | 'dateEnd'
-    ) => {
+    const updateRepoData = (value: string, key: 'dateStart' | 'dateEnd') => {
         setRepoData({ ...repoData, [key]: value });
     };
 
@@ -64,11 +63,7 @@ const GeneratePage = () => {
     };
 
     const generateChangelog = async () => {
-        const error =
-            !repoData.repoOwner ||
-            !repoData.project ||
-            !repoData.dateStart ||
-            !repoData.dateEnd;
+        const error = !repoData.dateStart || !repoData.dateEnd;
 
         if (error) {
             // don't set that there is an error until the user tries to submit
@@ -82,7 +77,7 @@ const GeneratePage = () => {
         const res = await fetch(`${API_BASE_URL}/generate-changelog`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(repoData),
+            body: JSON.stringify({ owner, name, ...repoData }),
         });
 
         const data: ChangelogResponse = await res.json();
@@ -123,8 +118,6 @@ const GeneratePage = () => {
         if (res.ok) {
             setRepoDataFetched(false);
             setRepoData({
-                repoOwner: '',
-                project: '',
                 dateStart: '',
                 dateEnd: '',
             });
@@ -133,7 +126,7 @@ const GeneratePage = () => {
             // just felt like I wanted to show a spinner even though it isn't necessary. UX decision on my end
             setTimeout(() => {
                 setIsLoading(false);
-                navigate('/changelogs');
+                router.push(`/${owner}/${name}/changelogs`);
             }, 1000);
         } else {
             console.error('Error saving changelog:', data.error);
@@ -143,141 +136,81 @@ const GeneratePage = () => {
 
     return (
         <div className="container">
-            <h1 className="title">AI-Powered Changelog Generator</h1>
-            <p className="subtitle">
+            <h1 className={styles.title}>
+                Generate Commit History for {owner}/{name}
+            </h1>
+            <p className={styles.subtitle}>
                 Quickly summarize recent commits into a clean, public changelog.
-                Just enter a repo and date range.
+                Just enter a date range.
             </p>
-
-            {/* 4 main inputs and changelog generating button */}
-            <div className="input-section">
-                <div className="input-group">
-                    <label htmlFor="owner">Repository Owner</label>
-                    <input
-                        className={
-                            hasRepoDataError && !repoData.repoOwner
-                                ? 'error-input'
-                                : ''
-                        }
-                        id="owner"
-                        type="text"
-                        onChange={(e) =>
-                            updateRepoData(e.target.value, 'repoOwner')
-                        }
-                        value={repoData.repoOwner}
-                        placeholder="ex. vercel"
-                    />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="project">Repository Name</label>
-                    <input
-                        className={
-                            hasRepoDataError && !repoData.project
-                                ? 'error-input'
-                                : ''
-                        }
-                        id="project"
-                        type="text"
-                        onChange={(e) =>
-                            updateRepoData(e.target.value, 'project')
-                        }
-                        value={repoData.project}
-                        placeholder="ex. next.js"
-                    />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="start">Start Date</label>
-                    <input
-                        className={
-                            hasRepoDataError && !repoData.dateStart
-                                ? 'error-input'
-                                : ''
-                        }
+            {/* 2 date inputs and changelog generating button */}
+            <form onSubmit={generateChangelog}>
+                <div className={styles.inputSection}>
+                    <DateInputField
                         id="start"
-                        type="date"
+                        hasError={hasRepoDataError && !repoData.dateStart}
+                        labelText="Start Date"
                         max={new Date().toISOString().split('T')[0]}
+                        value={repoData.dateStart}
                         onChange={(e) =>
                             updateRepoData(e.target.value, 'dateStart')
                         }
-                        value={repoData.dateStart}
                     />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="end">End Date</label>
-                    <input
-                        className={
-                            hasRepoDataError && !repoData.dateEnd
-                                ? 'error-input'
-                                : ''
-                        }
+                    <DateInputField
                         id="end"
-                        type="date"
+                        hasError={hasRepoDataError && !repoData.dateEnd}
+                        labelText="End Date"
                         min={repoData.dateStart}
                         max={new Date().toISOString().split('T')[0]}
+                        value={repoData.dateEnd}
                         onChange={(e) =>
                             updateRepoData(e.target.value, 'dateEnd')
                         }
-                        value={repoData.dateEnd}
                     />
                 </div>
-            </div>
-            <div className="button-container">
-                <button type="button" onClick={generateChangelog}>
-                    Generate Changelog
-                </button>
-            </div>
+                <div className="buttonContainer">
+                    <Button type="submit" disabled={hasRepoDataError}>
+                        Generate Changelog
+                    </Button>
+                </div>
+            </form>
 
             {isLoading && (
-                <div className="spinner-overlay">
-                    <div className="spinner" />
+                <div className={styles.spinnerOverlay}>
+                    <div className={styles.spinner} />
                 </div>
             )}
 
             {/* The inputs pre-filled by ChatGPT that can be saved to the changelog */}
             {repoDataFetched && (
-                <div>
-                    <div className="output-group">
-                        <label htmlFor="title">Title</label>
-                        <input
-                            className={
-                                hasChangelogDataError && !changelogData.title
-                                    ? 'error-input'
-                                    : ''
-                            }
-                            type="text"
-                            id="title"
-                            onChange={(e) =>
-                                updateChangelogData(e.target.value, 'title')
-                            }
-                            value={changelogData.title}
-                        />
-                    </div>
-                    <div className="output-group">
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            className={
-                                hasChangelogDataError &&
-                                !changelogData.description
-                                    ? 'error-input'
-                                    : ''
-                            }
-                            id="description"
-                            rows={8}
-                            onChange={(e) =>
-                                updateChangelogData(
-                                    e.target.value,
-                                    'description'
-                                )
-                            }
-                            value={changelogData.description}
-                        />
-                    </div>
-                    <div className="button-container">
-                        <button type="button" onClick={submitChangelog}>
+                <form onSubmit={submitChangelog}>
+                    <TextInputField
+                        id="title"
+                        hasError={hasChangelogDataError && !changelogData.title}
+                        labelText="Title"
+                        value={changelogData.title}
+                        onChange={(e) =>
+                            updateChangelogData(e.target.value, 'title')
+                        }
+                    />
+                    <TextAreaField
+                        id="description"
+                        hasError={
+                            hasChangelogDataError && !changelogData.description
+                        }
+                        labelText="Description"
+                        rows={8}
+                        value={changelogData.description}
+                        onChange={(e) =>
+                            updateChangelogData(e.target.value, 'description')
+                        }
+                    />
+                    <div className={styles.buttonContainer}>
+                        <Button type="submit" disabled={hasChangelogDataError}>
                             Submit Changelog
-                        </button>
+                        </Button>
                     </div>
-                </div>
+                </form>
             )}
         </div>
     );

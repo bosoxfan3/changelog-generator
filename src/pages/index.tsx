@@ -41,15 +41,11 @@ export default function HomePage() {
             <p className={styles.subtitle}>
                 Enter a repository owner and name to get started
             </p>
-            <form className={styles.form} onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <div className={styles.inputSection}>
                     <TextInputField
                         id="owner"
-                        className={
-                            hasRepoDataError && !repoSearchParams.owner
-                                ? 'error-input'
-                                : ''
-                        }
+                        hasError={hasRepoDataError && !repoSearchParams.owner}
                         labelText="Repository Owner"
                         placeholder={'ex. vercel'}
                         value={repoSearchParams.owner}
@@ -62,11 +58,7 @@ export default function HomePage() {
                     />
                     <TextInputField
                         id="name"
-                        className={
-                            hasRepoDataError && !repoSearchParams.name
-                                ? 'error-input'
-                                : ''
-                        }
+                        hasError={hasRepoDataError && !repoSearchParams.name}
                         labelText="Repository Name"
                         placeholder={'ex. next.js'}
                         value={repoSearchParams.name}

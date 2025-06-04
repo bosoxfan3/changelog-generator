@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import ChangelogCard from '../../components/changelog-card';
-import './style.css';
+import { useRouter } from 'next/router';
+import styles from './index.module.css';
+
+import ChangelogCard from '../../../../components/changelog-card';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -16,6 +18,9 @@ interface Changelog {
 }
 
 const ChangelogsPage = () => {
+    const router = useRouter();
+    const { owner, name } = router.query;
+
     const [changelogs, setChangelogs] = useState<Changelog[]>([]);
 
     useEffect(() => {
@@ -27,10 +32,7 @@ const ChangelogsPage = () => {
         getChangelogs();
     }, []);
 
-    const repoTitle =
-        changelogs.length > 0
-            ? `Changelog for ${changelogs[0].repoOwner}/${changelogs[0].project}`
-            : '';
+    const repoTitle = `Changelog for ${owner}/${name}`;
 
     return (
         <div className="container">

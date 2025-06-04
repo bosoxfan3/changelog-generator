@@ -4,16 +4,16 @@ type Props = {
     id: string;
     hasError?: boolean;
     labelText: string;
-    placeholder?: string;
+    rows: number;
     value: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
-const TextInputField = ({
+const TextAreaField = ({
     id,
     hasError,
     labelText,
-    placeholder,
+    rows,
     value,
     onChange,
 }: Props) => (
@@ -21,15 +21,14 @@ const TextInputField = ({
         <label className={styles.label} htmlFor={id}>
             {labelText}
         </label>
-        <input
+        <textarea
             id={id}
-            type="text"
-            className={`${hasError ?? styles.error} ${styles.input}`}
-            placeholder={placeholder}
+            className={`${hasError ?? styles.error} ${styles.textarea}`}
+            rows={rows}
             value={value}
             onChange={onChange}
         />
     </div>
 );
 
-export default TextInputField;
+export default TextAreaField;
