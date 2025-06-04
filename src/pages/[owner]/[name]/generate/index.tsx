@@ -7,8 +7,6 @@ import DateInputField from '../../../../components/date-input-field';
 import TextAreaField from '../../../../components/text-area-field';
 import Button from '../../../../components/button';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 type ChangelogSuccessResponse = {
     status: number;
     content: string;
@@ -74,7 +72,7 @@ const GeneratePage = () => {
         setHasRepoDataError(false);
         setIsLoading(true);
 
-        const res = await fetch(`${API_BASE_URL}/generate-changelog`, {
+        const res = await fetch(`/generate-changelog`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ owner, name, ...repoData }),
@@ -107,7 +105,7 @@ const GeneratePage = () => {
         setHasChangelogDataError(false);
         setIsLoading(true);
 
-        const res = await fetch(`${API_BASE_URL}/submit-changelog`, {
+        const res = await fetch(`/submit-changelog`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...repoData, ...changelogData }),

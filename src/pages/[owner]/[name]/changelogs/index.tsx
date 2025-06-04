@@ -3,8 +3,6 @@ import styles from './index.module.css';
 
 import ChangelogCard from '../../../../components/changelog-card';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 interface Changelog {
     id: string;
     repoOwner: string;
@@ -56,7 +54,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
 
     const { owner, name } = params;
 
-    const res = await fetch(`${API_BASE_URL}/changelogs`);
+    const res = await fetch(`/changelogs`);
     const changelogs = await res.json();
 
     return {

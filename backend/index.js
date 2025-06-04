@@ -27,6 +27,8 @@ app.use(
     })
 );
 
+app.options('*', cors());
+
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
