@@ -63,7 +63,7 @@ I used AI tools to help set up the Prisma and SQLite database functionality, err
 5. Then open `.env` and update it with your own values:
 
 ```
-REACT_APP_API_BASE_URL=http://localhost:8080
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 OPENAI_API_KEY=your_openai_key_here
 DATABASE_URL=file:./dev.db
 ```
